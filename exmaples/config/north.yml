@@ -1,0 +1,7 @@
+version: 1
+hosts:
+  - host01.example.com.au:
+      packages:
+        - nginx
+  - host02.example.com.au:
+
