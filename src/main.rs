@@ -1,78 +1,107 @@
 #[macro_use]
 extern crate clap;
+extern crate config;
 
-use std::{fs, io};
+use std::{fs, io, process};
 use git2::{Repository, Error};
+
+use std::collections::HashMap;
+use std::num::ParseIntError;
 
 ///
 /// Northbourne
 ///
-#[cfg(feature = "yaml")]
 fn main() {
+    match run() {
+        Ok(0) => process::exit(1),
+        Ok(_) => process::exit(0),
+        Err(err) => {
+            eprintln!("{}", err);
+            process::exit(1);
+        }
+        _ => {}
+    }
+}
+
+#[cfg(feature = "yaml")]
+fn run() -> Result<u64, ParseIntError> {
     use clap::App;
-//
-//    let yaml = load_yaml!("../cli.yml");
-//    let matches = App::from_yaml(yaml).get_matches();
-//
-//    println!("{:?}", matches);
-//
-//    let config = matches.value_of("config").unwrap_or("default.conf");
-//    println!("Value for config: {}", config);
-//
-//    // Calling .unwrap() is safe here because "INPUT" is required (if "INPUT" wasn't
-//    // required we could have used an 'if let' to conditionally get the value)
-//    println!("Using input file: {}", matches.value_of("INPUT").unwrap());
-//
-//    // Vary the output based on how many times the user used the "verbose" flag
-//    // (i.e. 'myprog -v -v -v' or 'myprog -vvv' vs 'myprog -v'
-//    match matches.occurrences_of("v") {
-//        0 => println!("No verbose info"),
-//        1 => println!("Some verbose info"),
-//        2 => println!("Tons of verbose info"),
-//        3 | _ => println!("Don't be crazy"),
-//    }
-//
-//    // You can handle information about subcommands by requesting their matches by name
-//    // (as below), requesting just the name used, or both at the same time
-//    if let Some(matches) = matches.subcommand_matches("test") {
-//        if matches.is_present("debug") {
-//            println!("Printing debug info...");
-//        } else {
-//            println!("Printing normally...");
-//        }
-//    }
 
-    let repo_url =  "https://github.com/sifex/northbourne-test-repo";
+    let yaml = load_yaml!("../cli.yml");
+    let matches = App::from_yaml(yaml).get_matches();
 
+    // Config
+    match matches.value_of("config") {
+        Some(config_path) => {
+            let mut settings = config::Config::default();
+
+            settings.merge(config::File::with_name("conf/default.yml")).unwrap();
+            settings.merge(config::File::with_name(config_path)).unwrap();
+
+            // print!("{:?}", settings.try_into::<HashMap<String, String>>().unwrap());
+
+            clone_repo(settings.get_str("repo").unwrap().as_str(), "/tmp/repo2");
+        },
+        _ => {
+
+        }
+    }
+
+    // Repo
+    match matches.value_of("repo") {
+        Some(repo) => {
+            println!("Value for repo: {}", repo);
+        },
+        _ => {
+
+        }
+    }
+
+    Ok(1)
+}
+
+
+fn clone_repo(repo_url: &str, temp_directory: &str) -> Repository {
     println!("Cloning repo {}", repo_url);
 
-    let repo: Repository = match clone_dir(repo_url, "/tmp/repo") {
-        Err(_e) => {
-            panic!("Error in cloning repo")
-        },
+    let repo: Repository = match clone(repo_url, temp_directory) {
         Ok(repo) => {
             println!("Cloned repo {}", repo_url);
             repo
+        },
+        Err(e) => {
+            panic!("Error in cloning repo: {}", e)
         }
     };
 
     match repo.is_empty() {
-        Ok(_) => {},
+        Ok(_) => repo,
         Err(_e) => {
             panic!("Repo is empty")
         },
     }
 }
 
-
-fn clone_dir(url: &str, temp_directory: &str) -> Result<Repository, Error>
+fn clone(url: &str, temp_directory: &str) -> Result<Repository, Error>
 {
     // Remove all of the previous repo
-    match fs::remove_dir_all(temp_directory) {
-        Err(_e) => {
-            panic!("Directory could not be emptied")
+    match fs::read_dir(temp_directory) {
+        Ok(dir) => {
+            match dir.count() {
+                0 => {},
+                _ => {
+                    match fs::remove_dir_all(temp_directory) {
+                        Err(_e) => {
+                            panic!("Directory could not be emptied");
+                        }
+                        _ => {}
+                    }
+                }
+            }
+        },
+        _ => {
+
         }
-        _ => {}
     }
 
     // Clone the repo into the

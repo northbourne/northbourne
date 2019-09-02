@@ -11,6 +11,7 @@ edition = "2018"
 [dependencies]
 git2 = "0.10"
 clap = {version = "~2.27.0", features = ["yaml"]}
+config = "0.9"
 
 [features]
 default = [ "yaml" ]
