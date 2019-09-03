@@ -1,2 +1,3 @@
 repo: ""
+repo_type: "git"
 tmp_repo: "/tmp/northbourne/repo/"

@@ -1,12 +1,11 @@
-use git2::{ErrorCode, Repository};
-use std::{fs, io};
+use std::{fs};
+use crate::run::repo::GitRepo;
 
-use std::borrow::{Borrow, BorrowMut};
-use std::collections::HashMap;
-use std::num::ParseIntError;
+mod repo;
+use repo::Repo;
 
 #[cfg(feature = "yaml")]
-pub fn program() -> Result<u64, Error> {
+pub fn program() -> Result<u64, &'static str> {
     use clap::App;
 
     let yaml = load_yaml!("../cli.yml");
@@ -37,34 +36,19 @@ pub fn program() -> Result<u64, Error> {
     }
 
     if settings.get_str("repo").unwrap() == "" {
-        return Err(Error("No repository specified", ErrorCode::NotFound))
+        return Err("No code specified")
     }
 
-    clone(
-        settings.get_str("repo").unwrap().as_str(),
-        settings.get_str("tmp_repo").unwrap().as_str(),
+    let mut repo: GitRepo = Repo::new(settings.get_str("repo").unwrap().as_str());
+
+    repo.clone(
+        settings.get_str("tmp_repo").unwrap().as_str()
     );
+//
+//    repo::clone(
+//        settings.get_str("repo").unwrap().as_str(),
+//        settings.get_str("tmp_repo").unwrap().as_str(),
+//    );
 
     Ok(1)
-}
-
-fn clone(url: &str, temp_directory: &str) -> Result<Repository, ErrorCode> {
-    // Remove all of the previous repo
-    match fs::read_dir(temp_directory) {
-        Ok(dir) => match dir.count() {
-            0 => {}
-            _ => match fs::remove_dir_all(temp_directory) {
-                Err(_e) => {
-                    return Err(ErrorCode::Directory);
-                }
-                _ => {}
-            },
-        },
-        Err(_e) => {
-            return Err(ErrorCode::Directory);
-        }
-    }
-
-    // Clone the repo into the directory
-    Repository::clone(url, temp_directory).map_err(|_| ErrorCode::Directory)
 }
