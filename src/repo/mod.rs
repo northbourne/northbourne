@@ -13,7 +13,7 @@ impl GitRepo {
         true
     }
 
-    pub fn clone(temp_directory: &str) -> Result<Repository, ErrorCode> {
+    pub fn clone(&self, temp_directory: &str) -> Result<Repository, ErrorCode> {
         // Remove all of the previous repo
         match fs::read_dir(temp_directory) {
             Ok(dir) => match dir.count() {
@@ -31,7 +31,7 @@ impl GitRepo {
         }
 
         // Clone the repo into the directory
-        Repository::clone(url, temp_directory).map_err(|_| ErrorCode::Directory)
+        Repository::clone(self.url, temp_directory).map_err(|_| ErrorCode::Directory)
     }
 }
 

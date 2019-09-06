@@ -1,14 +1,21 @@
-mod brew;
+pub mod homebrew;
 
-enum PackageManager {
+use std::process::{Command, Output};
+use crate::error::GenericError;
+
+pub enum PackageManagerType {
     Yum,
     Apt,
-    Brew
+    Homebrew
 }
 
-fn install(name: &str, type_pm: PackageManager) {
-    Command::new("sh")
-        .args(&["echo hello"])
-        .output()
-        .expect("failed to execute process")
+pub trait PackageManagerInterface {
+    fn install(&self) -> Result<(), GenericError>;
+    fn uninstall(&self) -> Result<(), GenericError>;
+    fn remove(&self) -> Result<(), GenericError>;
+}
+
+#[derive(Debug)]
+pub struct PackageManager<T: PackageManagerInterface> {
+    provider: T
 }
