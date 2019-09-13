@@ -12,6 +12,8 @@ edition = "2018"
 git2 = "0.10"
 clap = {version = "~2.27.0", features = ["yaml"]}
 config = "0.9"
+log = { version = "0.4", features = ["max_level_debug", "release_max_level_warn"] }
+simplelog = "0.7"
 
 [features]
 default = [ "yaml" ]

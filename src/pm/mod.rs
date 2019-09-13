@@ -1,7 +1,7 @@
 pub mod homebrew;
 
 use std::process::{Command, Output};
-use crate::error::GenericError;
+use crate::error::Error;
 
 pub enum PackageManagerType {
     Yum,
@@ -9,13 +9,15 @@ pub enum PackageManagerType {
     Homebrew
 }
 
+const HOME : PackageManagerType = PackageManagerType::Homebrew;
+
 pub trait PackageManagerInterface {
-    fn install(&self) -> Result<(), GenericError>;
-    fn uninstall(&self) -> Result<(), GenericError>;
-    fn remove(&self) -> Result<(), GenericError>;
+    fn install(&self) -> Result<bool, Error>;
+    fn uninstall(&self) -> Result<bool, Error>;
+    fn remove(&self) -> Result<bool, Error>;
 }
 
 #[derive(Debug)]
 pub struct PackageManager<T: PackageManagerInterface> {
-    provider: T
+    pub provider: T
 }

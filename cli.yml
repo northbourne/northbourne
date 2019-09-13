@@ -9,9 +9,9 @@ args:
       value_name: FILE
       help: Sets a custom config file
       takes_value: true
-  - repo:
+  - repo_url:
       short: r
-      long: repo
+      long: repo_url
       value_name: URL
       help: Sets the remote repo
       takes_value: true
