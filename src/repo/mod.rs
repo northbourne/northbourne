@@ -1,10 +1,12 @@
-use git2::{ErrorCode, ErrorCode::NotFound, Repository, Error as GitError, Remote};
+use std::fmt::{Debug, Formatter};
 use std::fs;
-use log::{info,warn,error};
+use std::io::Write;
+
+use git2::{Error as GitError, ErrorCode, ErrorCode::NotFound, Remote, Repository};
+use log::{error, info, warn};
+
 use crate::error::Error;
 use crate::error::Error::Generic;
-use std::fmt::{Debug, Formatter};
-use std::io::Write;
 
 pub struct GitRepo {
     pub repo_url: String,
@@ -69,7 +71,7 @@ impl GitRepo {
 }
 
 impl Repo for GitRepo {
-    fn new() -> GitRepo {
+    fn new() -> Self {
         GitRepo {
             repo_url: String::from("Test"),
             repo_directory: String::from("")
