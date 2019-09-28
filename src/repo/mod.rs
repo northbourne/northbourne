@@ -23,7 +23,7 @@ impl GitRepo {
         true
     }
 
-    pub fn sync(&self) -> Result<Repository, Error> {
+    pub fn discover(&self) -> Result<Repository, Error> {
         // Remove all of the previous repo
         info!("---- North Repository {:} ----", self.repo_url);
 
@@ -36,6 +36,15 @@ impl GitRepo {
         }
 
         // Clone the repo into the repo_directory
+    }
+
+    pub fn sync(&self) -> Result<Repository, Error> {
+        // Remove all of the previous repo
+        info!("---- Syncing Repository {:}", self.repo_url);
+
+        // match Repository::open(&self.repo_directory).unwrap().branch("master").unwrap().
+
+        Ok(Repository::open(&self.repo_directory).unwrap())
     }
 
     fn check_remote_is_the_same(remote: &Remote, origin: &str) -> bool {
@@ -55,7 +64,6 @@ impl GitRepo {
                 Err(Generic)
             }
         }
-
     }
 
     pub fn set_repo_url(&mut self, repo_url: String) -> &GitRepo {

@@ -34,15 +34,12 @@ fn main() {
 #[cfg(feature = "yaml")]
 pub fn program() -> Result<u64, &'static str> {
     use clap::App;
-
     let yaml = load_yaml!("../cli.yml");
     let matches = App::from_yaml(yaml).get_matches();
 
     let mut settings = config::Config::default();
 
-    settings
-        .merge(config::File::with_name("conf/default.yml"))
-        .unwrap();
+    settings.merge(config::File::with_name("conf/default.yml")).unwrap();
 
     // Config
     match matches.value_of("config") {
@@ -77,30 +74,25 @@ pub fn program() -> Result<u64, &'static str> {
         // return Err("No code specified")
     }
 
-
     let mut repo: GitRepo = Repo::new();
+
     repo.set_repo_url(settings.get_str("repo_url").unwrap());
     repo.set_repo_directory(settings.get_str("repo_directory").unwrap());
 
-    repo.sync();
-
-
-    repo::clone(
-        settings.get_str("repo").unwrap().as_str(),
-        settings.get_str("tmp_repo").unwrap().as_str(),
-    );
+    repo.discover();
+    repo.clone();
 
     let pm = pm::homebrew::Homebrew::new(&settings);
 
-    packages.iter().for_each(|package| -> () {
-        match pm.check(package) {
-            Ok(true) => {},
-            Ok(false) => {
-                pm.install(package);
-            },
-            Err(_) => {},
-        };
-    });
+//    packages.iter().for_each(|package| -> () {
+//        match pm.check(package) {
+//            Ok(true) => {},
+//            Ok(false) => {
+//                pm.install(package);
+//            },
+//            Err(_) => {},
+//        };
+//    });
 
     Ok(1)
 }
