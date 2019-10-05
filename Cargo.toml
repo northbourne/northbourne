@@ -13,8 +13,11 @@ git2 = "0.10"
 clap = {version = "~2.27.0", features = ["yaml"]}
 config = "0.9"
 log = { version = "0.4", features = ["max_level_debug", "release_max_level_warn"] }
-simplelog = "0.7"
+simplelog = "0.7.3"
 clokwerk = "0.2.2"
+solvent = "0.8.1"
+rs-graph = "0.17.1"
+yaml-rust = "0.4.3"
 
 [features]
 default = [ "yaml" ]

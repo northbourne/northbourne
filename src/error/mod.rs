@@ -6,13 +6,27 @@ type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug)]
 pub enum Error {
-    Generic
+    Generic = 0,
+    Permission = 1,
+    NotFound = 2,
 }
 
 impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl std::error::Error for Error {
+    fn description(&self) -> &str {
         match self {
-            Error::Generic => write!(f, "Generic Error")
+            Error::Generic => "Generic Error was found, exiting",
+            Error::Permission => "Permissions error was found, exiting",
+            Error::NotFound => "Not found exception was found thrown, exiting"
         }
+    }
+
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        None
     }
 }

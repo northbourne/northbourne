@@ -33,7 +33,6 @@ impl Homebrew {
 impl PackageManagerInterface for Homebrew {
     fn check(&self, package_name: &str) -> Result<bool, Error> {
         let program = Command::new(self.root_cmd.as_str())
-            .env("HOMEBREW_NO_AUTO_UPDATE", "1")
             .arg(self.check_cmd.as_str()).output().unwrap();
 
         match String::from_utf8(program.stdout).unwrap()
@@ -56,7 +55,7 @@ impl PackageManagerInterface for Homebrew {
 
         if let Some(ref mut stdout) = program.stdout {
             for line in BufReader::new(stdout).lines() {
-                info!("{:}", line.unwrap());
+                debug!("{:}", line.unwrap());
             }
         }
 
@@ -79,7 +78,7 @@ impl PackageManagerInterface for Homebrew {
 
         if let Some(ref mut stdout) = program.stdout {
             for line in BufReader::new(stdout).lines() {
-                info!("{:}", line.unwrap());
+                debug!("{:}", line.unwrap());
             }
         }
 
