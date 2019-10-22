@@ -7,11 +7,16 @@
 
 #[macro_use]
 extern crate log;
+
 #[macro_use]
 extern crate clap;
-extern crate config;
-extern crate yaml_rust;
 
+#[macro_use]
+extern crate rust_embed;
+
+extern crate config;
+
+extern crate yaml_rust;
 
 mod error;
 mod repo;
@@ -31,18 +36,24 @@ use std::time::Duration;
 use clap::App;
 use clokwerk::{Scheduler, TimeUnits};
 use clokwerk::Interval::*;
-use config::Config;
+use config::{Config, File as ConfigFile, FileFormat::Yaml};
 use std::convert::TryInto;
 use git2::Repository;
 use yaml_rust::{YamlLoader, YamlEmitter};
 use crate::action::{Actionable, Action};
-use std::fs::File;
 use std::io::Read;
 use yaml_rust::yaml::Array;
 use crate::pm::homebrew::Homebrew;
 use crate::pm::PackageManagerInterface;
+use simplelog::{TermLogError, TermLogger};
+use crate::error::Error::Generic;
+use std::fs::File;
 
 pub type Result<T> = std::result::Result<T, Error>;
+
+#[derive(RustEmbed)]
+#[folder = "conf/"]
+struct DefaultConfig;
 
 fn main() {
     match program() {
@@ -52,6 +63,13 @@ fn main() {
             process::exit(1);
         }
     }
+}
+
+fn start_logging() -> Result<()> {
+    simplelog::TermLogger::init(simplelog::LevelFilter::Debug, simplelog::Config::default(), simplelog::TerminalMode::Mixed)
+        .map_err(|logger_error| -> crate::error::Error {
+            Generic
+        })
 }
 
 #[cfg(feature = "yaml")]
@@ -64,7 +82,9 @@ fn program() -> Result<()> {
     // Load up
     let mut settings = config::Config::default();
 
-    settings.merge(config::File::with_name("conf/default.yml")).expect("Could not open ");
+    settings.merge(
+        ConfigFile::from_str(std::str::from_utf8(DefaultConfig::get("default.yml").unwrap().as_ref()).unwrap(), Yaml)
+    );
 
     let yaml = load_yaml!("../cli.yml");
     let matches = App::from_yaml(yaml).get_matches();

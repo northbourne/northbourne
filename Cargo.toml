@@ -18,6 +18,7 @@ clokwerk = "0.2.2"
 solvent = "0.8.1"
 rs-graph = "0.17.1"
 yaml-rust = "0.4.3"
+rust-embed="5.1.0"
 
 [features]
 default = [ "yaml" ]
