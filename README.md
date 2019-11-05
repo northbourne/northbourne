@@ -1,13 +1,3 @@
 # Northbourne
 
-Northbourne is a configuration management agent, that ensures configuration on linux environments. It can (and should) be used for 
-
-## What Northbourne is
-
-> Isn't this just a puppet/ansible clone.
-
-Sure.
-    
-## Getting Started
-
-?> // TODO
+Northbourne is a context-agnostic configuration management agent written in Rust. It takes the best features of both Puppet, Chef and Ansible and combines them into one single unusable software.
