@@ -8,6 +8,6 @@ Northbourne is a context-agnostic configuration management agent written in Rust
 
 Northbourne is designed to run independant from the host you want to configure. The context can be the local shell, a remote one, or even a custom one if SSH isn't supported.
 
-# Contributing
+## Contributing
 
 Northbourne's is currently requesting RFC's / Discussions around different use cases. Please feel free to lodge any issues as discussion points.
