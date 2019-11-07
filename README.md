@@ -10,7 +10,7 @@ You shouldn't. Seriously. Northbourne is currently in experimental development p
 
 ## Features
 
-Northbourne's main philosephy is that the learning curve to use most CM tools has become too complex, and needs to be simplified if more environments are to start utilising it.
+Northbourne's main philosophy is that the learning curve to use most CM tools has become too complex, and needs to be simplified if more environments are to start utilising it.
 
 ### Stateful Manifest
 
@@ -26,7 +26,7 @@ Lastly it's designed to understand security vulnerabilities located within your 
 
 ## Context Agnostic?
 
-Northbourne is designed to run independant from the endpoint you want to configure, without being forced to be a "master" or a "slave". The context driver can be the local shell (Eg. bash, zsh), a remote one (Eg. ssh), or even a custom one for various communication methods.
+Northbourne is designed to run independent from the endpoint you want to configure, without being forced to be a "master" or a "slave". The context driver can be the local shell (Eg. bash, zsh), a remote one (Eg. ssh), or even a custom one for various communication methods.
 
 ## Contributing
 
