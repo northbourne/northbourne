@@ -1,8 +1,10 @@
+<center>
 # Northbourne
 
 Northbourne is a context-agnostic desired-state configuration management agent written in Rust. It takes the best features of Puppet, Chef and Ansible and combines them into one single unusable program.
 
 [![Build Status](https://travis-ci.com/sifex/northbourne.svg?branch=master)](https://travis-ci.com/sifex/northbourne) ![GitHub contributors](https://img.shields.io/github/contributors/sifex/northbourne?color=blue) ![GitHub All Releases](https://img.shields.io/github/downloads/sifex/northbourne/total?logo=github) ![https://img.shields.io/badge/please-don't%20use%20this-red](https://img.shields.io/badge/please-don't%20use%20this-red)
+</center>
 
 ## Why should I use this?
 
