@@ -14,7 +14,7 @@ Northbourne's main philosophy is that the learning curve to use most CM tools ha
 
 ### Desired State
 
-Northbourne provides an interface for configuring hosts by connecting Northbourne directly to a Git repository. It's designed to parse a manifest file `north.yml`, and to understand forward and rollback transactions based on changes to manifest within Git. Rollbacks should be as easy as a `git revert`.
+Northbourne is based around a desired state architecture. It provides an interface for configuring hosts by connecting Northbourne agent directly to a Git repository and configuring the hosts – or groups of hosts – how they should look. It's designed to parse a manifest file `north.yml`, and to understand forward and rollback transactions based on changes to manifest within Git. Rollbacks should be as easy as a `git revert`.
 
 ### Manual Configuration to IaC Conversion
 
