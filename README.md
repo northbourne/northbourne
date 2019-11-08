@@ -1,4 +1,4 @@
-<h1 align="center">Northbourne</h1>
+<h1 align="center" style="font-size: 180px;">Northbourne</h1>
 
 <p align="center">A context-agnostic desired-state configuration management agent written in Rust<br /><i>Taking the best features of Puppet, Chef and Ansible and combines them into one single unusable program.</i></p>
 
