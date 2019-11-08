@@ -1,6 +1,6 @@
 <h1 align="center">Northbourne</h1>
 
-<p align="center">A context-agnostic desired-state configuration management agent written in Rust</p>
+<p align="center">A context-agnostic desired-state configuration management agent written in Rust<br /><i>Taking the best features of Puppet, Chef and Ansible and combines them into one single unusable program.</i></p>
 
 <p align="center"><a href="https://travis-ci.com/sifex/northbourne"><img src="https://travis-ci.com/sifex/northbourne.svg?branch=master" alt="Build Status"></a> <img src="https://img.shields.io/github/contributors/sifex/northbourne?color=blue" alt="GitHub contributors"> <img src="https://img.shields.io/github/downloads/sifex/northbourne/total?logo=github" alt="GitHub All Releases"> <img src="https://img.shields.io/badge/please-don&#39;t%20use%20this-red" alt="https://img.shields.io/badge/please-don&#39;t%20use%20this-red"></p>
 
