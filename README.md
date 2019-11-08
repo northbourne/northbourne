@@ -1,10 +1,6 @@
-<center>
-# Northbourne
+<p align="center"><h1>Northbourne</h1></p>
 
-Northbourne is a context-agnostic desired-state configuration management agent written in Rust. It takes the best features of Puppet, Chef and Ansible and combines them into one single unusable program.
-
-[![Build Status](https://travis-ci.com/sifex/northbourne.svg?branch=master)](https://travis-ci.com/sifex/northbourne) ![GitHub contributors](https://img.shields.io/github/contributors/sifex/northbourne?color=blue) ![GitHub All Releases](https://img.shields.io/github/downloads/sifex/northbourne/total?logo=github) ![https://img.shields.io/badge/please-don't%20use%20this-red](https://img.shields.io/badge/please-don't%20use%20this-red)
-</center>
+<p align="center"><a href="https://travis-ci.com/sifex/northbourne"><img src="https://travis-ci.com/sifex/northbourne.svg?branch=master" alt="Build Status"></a> <img src="https://img.shields.io/github/contributors/sifex/northbourne?color=blue" alt="GitHub contributors"> <img src="https://img.shields.io/github/downloads/sifex/northbourne/total?logo=github" alt="GitHub All Releases"> <img src="https://img.shields.io/badge/please-don&#39;t%20use%20this-red" alt="https://img.shields.io/badge/please-don&#39;t%20use%20this-red"></p>
 
 ## Why should I use this?
 
