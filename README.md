@@ -16,7 +16,7 @@ Northbourne is based around a desired state architecture. It provides an interfa
 
 ### Manual Configuration to IaC Conversion
 
-It's also designed to handle a translation of shell commands to modify the manifest manifest, such that the shell history can be parsed back into the manifest – usually on a manual basis. Imagine a tools that ensured nginx was always installed based on the fact you typed `sudo apt-get install nginx`.
+It's also designed to handle a translation of shell commands to modify the manifest manifest, such that the shell history can be parsed back into the manifest – usually on a manual basis. Imagine a tool that ensured nginx was always installed based on the fact you typed `sudo apt-get install nginx`. Existing configuration files can also be specified to be templated into the repository, with automatic hostname and directory variable extraction.
 
 ### Automatic Security Pull Requests
 
