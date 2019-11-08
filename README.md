@@ -1,4 +1,4 @@
-<p align="center"><h1>Northbourne</h1></p>
+<h1 align="center">Northbourne</h1>
 
 <p align="center"><a href="https://travis-ci.com/sifex/northbourne"><img src="https://travis-ci.com/sifex/northbourne.svg?branch=master" alt="Build Status"></a> <img src="https://img.shields.io/github/contributors/sifex/northbourne?color=blue" alt="GitHub contributors"> <img src="https://img.shields.io/github/downloads/sifex/northbourne/total?logo=github" alt="GitHub All Releases"> <img src="https://img.shields.io/badge/please-don&#39;t%20use%20this-red" alt="https://img.shields.io/badge/please-don&#39;t%20use%20this-red"></p>
 
