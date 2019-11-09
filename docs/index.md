@@ -12,5 +12,4 @@
 
 !> You shouldn't. Seriously. Northbourne is currently in experimental development phase, looking at designing good abstractions from the outset, trying to understand in-depth what other configuration management software does poorly and to improve on them.
 
-## Table of Contents
-
+##
