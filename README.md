@@ -39,3 +39,7 @@ Documentation for Northbourne is located at https://docs.north.sh/.
 ## Contributing
 
 Northbourne's is currently requesting RFC's / Discussions around different use cases. Please feel free to lodge any issues as discussion points.
+
+## License
+
+Northbourne is licensed under the [GNU General Public License v3.0](https://github.com/sifex/northbourne/blob/master/LICENSE)
