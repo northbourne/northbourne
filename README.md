@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="116" height="117" src="https://i.imgur.com/K7bQB0D.png">
+</p>
+
 <h1 align="center">Northbourne</h1>
 
 <p align="center">A context-agnostic desired-state configuration management agent written in Rust<br /><i>Taking the best features of Puppet, Chef and Ansible and combines them into one single unusable program.</i></p>
