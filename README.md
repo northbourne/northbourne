@@ -30,7 +30,11 @@ Lastly it's designed to understand security vulnerabilities located within your 
 
 ## Context Agnostic?
 
-Northbourne is designed to run independent from the endpoint you want to configure, without being forced to be a "master" or a "slave". The context driver can be the local shell (Eg. bash, zsh), a remote one (Eg. ssh), or even a custom one for various communication methods. 
+Northbourne is designed to run independent from the endpoint you want to configure, without being forced to be a "master" or a "slave". The context driver can be the local shell (Eg. bash, zsh), a remote one (Eg. ssh), or even a custom one for various communication methods.
+
+## Documentation
+
+Documentation for Northbourne is located at https://docs.north.sh/.
 
 ## Contributing
 
