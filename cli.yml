@@ -7,8 +7,19 @@ args:
       short: c
       long: config
       value_name: FILE
-      help: Sets a custom config file
+      help: Northbourne Configuration File (Eg. local.yml)
       takes_value: true
+  - log_level:
+        short: l
+        long: log_level
+        value_name: FILE
+        help: Log level for the application (Eg. [DEBUG, INFO, WARN, ERROR])
+        takes_value: true
+        possible_values:
+            - debug
+            - info
+            - warn
+            - error
   - repo_url:
       short: r
       long: repo_url
