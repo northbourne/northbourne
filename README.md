@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="116" height="117" src="https://i.imgur.com/K7bQB0D.png">
+  <img width="116" height="117" src="https://i.imgur.com/4zYSqS8.png">
 </p>
 
 <h1 align="center">Northbourne</h1>
