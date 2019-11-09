@@ -28,11 +28,11 @@ It's also designed to handle a translation of shell commands to modify the manif
 
 Lastly it's designed to understand security vulnerabilities located within your configuration, and to automatically create pull requests to Github-; and Gitlab- based repositories based on known application, package and module CVE's. Similar to how npm provides automatic security PR's to any outstanding known problem versions of packages, the same can be done with Northbourne IaC manifests. 
 
-## Context Agnostic?
+### Context Agnostic
 
 Northbourne is designed to run independent from the endpoint you want to configure, without being forced to be a "master" or a "slave". The context driver can be the local shell (Eg. bash, zsh), a remote one (Eg. ssh), or even a custom one for various communication methods.
 
-## Documentation
+<a href="https://docs.north.sh/"><h2>Documentation</h2></a>
 
 Documentation for Northbourne is located at https://docs.north.sh/.
 
