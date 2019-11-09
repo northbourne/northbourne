@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="116" height="117" src="https://i.imgur.com/4zYSqS8.png">
+  <img width="116" height="117" src="https://github.com/sifex/northbourne/raw/master/docs/images/logo.png">
 </p>
 
 <h1 align="center">Northbourne</h1>
