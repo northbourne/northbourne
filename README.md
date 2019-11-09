@@ -14,7 +14,7 @@ You shouldn't. Seriously. Northbourne is currently in experimental development p
 
 ## Features
 
-Northbourne's main philosophy is that the operation of most CM tools has become too complex, and needs to be simplified if more users are to start utilising it. It can be a fantastic way to manage infrastructure if it becomes simple enough to use.
+Northbourne's main philosophy is that the operation of most CM tools has become too complex, and need to be simplier to use if more people are to start utilising it. It can be a fantastic way to initially provision and manage existing infrastructure if used correctly.
 
 ### Context Agnostic
 
