@@ -15,11 +15,11 @@ extern crate rust_embed;
 extern crate yaml_rust;
 
 use std::{mem, process};
+use std::borrow::Borrow;
 use std::convert::TryInto;
 use std::fs;
 use std::fs::File;
 use std::io::Read;
-use std::path::Path;
 use std::process::Output;
 use std::str;
 use std::thread;
@@ -28,10 +28,13 @@ use std::time::Duration;
 use clap::App;
 use clokwerk::{Scheduler, TimeUnits};
 use clokwerk::Interval::*;
-use config::{Config, File as ConfigFile, FileFormat::Yaml};
+use config::{Config, File as ConfigFile};
 use git2::Repository;
+use simplelog::{TermLogError, TermLogger};
 use yaml_rust::{YamlEmitter, YamlLoader};
 use yaml_rust::yaml::Array;
+
+use tree::cartography::Cartography;
 
 use crate::action::{Action, Actionable};
 use crate::error::Error;
@@ -46,6 +49,7 @@ mod repo;
 mod pm;
 mod transaction;
 mod action;
+mod tree;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -53,6 +57,16 @@ pub type Result<T> = std::result::Result<T, Error>;
 #[folder = "conf/"]
 struct DefaultConfig;
 
+struct GodObject {
+    repo: Repository,
+    cartography_current: Cartography,
+    cartography_incoming: Cartography,
+    action_list: Vec<Action>,
+}
+
+///
+/// Program Wrapper
+///
 fn main() {
     match program() {
         Ok(()) => process::exit(0),
@@ -63,35 +77,40 @@ fn main() {
     }
 }
 
-fn start_logging(settings: Config) -> Result<()> {
-    // Log Level
-    let log_level = match settings.get_str("log_level").unwrap().as_str() {
-        "debug" => simplelog::LevelFilter::Debug,
-        "info" => simplelog::LevelFilter::Info,
-        "warn" => simplelog::LevelFilter::Warn,
-        "error" => simplelog::LevelFilter::Error,
-        _ => { simplelog::LevelFilter::Off }
-    };
-
-    simplelog::CombinedLogger::init(
-        vec![
-            simplelog::TermLogger::new(log_level, simplelog::Config::default(), simplelog::TerminalMode::Mixed).unwrap(),
-            simplelog::WriteLogger::new(log_level, simplelog::Config::default(), File::create("my_rust_binary.log").unwrap()),
-        ]
-    ).unwrap();
-
-    Ok(())
+fn start_logging() -> Result<()> {
+    simplelog::TermLogger::init(simplelog::LevelFilter::Debug, simplelog::Config::default(), simplelog::TerminalMode::Mixed)
+        .map_err(|logger_error| -> crate::error::Error {
+            Generic
+        })
 }
 
+fn load_config_from_embed(settings: &mut Config, default_file: &str) -> Result<Config> {
+    let default_config = DefaultConfig::get(default_file).unwrap();
+
+    info!("{:?}", default_config.as_ref());
+
+    settings.merge(ConfigFile::from_str(std::str::from_utf8(default_config.as_ref()).unwrap(), config::FileFormat::Yaml))
+        .map_err(|logger_error| -> crate::error::Error {
+            Generic
+        });
+
+    Ok(settings.clone())
+}
+
+//
 #[cfg(feature = "yaml")]
 fn program() -> Result<()> {
+    // Initialise Logging
+    let simple_logger = simplelog::TermLogger::init(simplelog::LevelFilter::Debug, simplelog::Config::default(), simplelog::TerminalMode::Mixed);
+
+    info!("Starting Northbourne");
+
     // Load up
-    let mut settings = config::Config::default();
+    let mut settings = load_config_from_embed(&mut config::Config::default(), "default.yml").expect("Could not unwrap config file");
+    info!("{:?}", settings.get_str("config"));
 
-    settings.merge(
-        ConfigFile::from_str(std::str::from_utf8(DefaultConfig::get("default.yml").unwrap().as_ref()).unwrap(), Yaml)
-    );
 
+    // CLI
     let yaml = load_yaml!("../cli.yml");
     let matches = App::from_yaml(yaml).get_matches();
 
@@ -103,42 +122,36 @@ fn program() -> Result<()> {
                 .merge(config::File::with_name(config_path))
                 .unwrap();
         }
-        _ => {
-            // TODO Throw
-        }
-    }
-
-    match matches.value_of("log_level") {
-        Some(repo) => {
-            settings.set("log_level", repo);
-        }
         _ => {}
     }
 
-    start_logging(settings).unwrap();
+    // Log Level
+    let log_level = match settings.get_str("log_level").unwrap().as_str() {
+        "debug" => simplelog::LevelFilter::Debug,
+        "info" => simplelog::LevelFilter::Info,
+        "warn" => simplelog::LevelFilter::Warn,
+        "error" => simplelog::LevelFilter::Error,
+        _ => { simplelog::LevelFilter::Off }
+    };
+
+    let simple_logger = simplelog::TermLogger::init(log_level, simplelog::Config::default(), simplelog::TerminalMode::Mixed);
 
     // ////////////// -------- ///////////////
 
-    info!("Starting Northbourne");
-
     // Repo
+    println!("{:?}", matches.value_of("repo_url"));
     match matches.value_of("repo_url") {
+        Some("") => return Err(Error::Generic),
         Some(repo) => {
             settings.set("repo_url", repo);
         }
-        _ => {}
-    }
-
-    if settings.get_str("repo_url").unwrap() == "" {
-        return Err(Error::Generic);
+        _ => return Err(Error::Generic)
     }
 
     let every: u32 = settings
         .get_int("every")      .expect("Could not find default value for \"every\".")
         .try_into()                 .expect("Could not convert \"every\" value to u32");
-
     let mut scheduler = Scheduler::new();
-
     scheduler.every(every.seconds()).run(move || {
         ensure(&mut settings).unwrap()
     });
@@ -149,20 +162,31 @@ fn program() -> Result<()> {
 
     Ok(())
 }
+// Ensure Method
 
 fn ensure(settings: &Config) -> Result<()> {
-    let mut repo: GitRepo = GitRepo::new();
+    let mut repo_handler = GitRepo::new();
 
-    repo.set_repo_url(settings.get_str("repo_url").unwrap());
-    repo.set_repo_directory(settings.get_str("repo_directory").unwrap());
+    repo_handler.set_repo_url(settings.get_str("repo_url").unwrap());
+    repo_handler.set_repo_directory(settings.get_str("repo_directory").unwrap());
 
-    repo.discover()
-        .and_then(|repository| -> Result<Repository> {
+    repo_handler.discover()
+        .and_then(|repository| -> Result<GodObject> {
             info!("Found Existing Repository: {:?}", repository.path());
+
+            Ok(GodObject {
+                repo: repository,
+                cartography_current: Cartography {},
+                cartography_incoming: Cartography {},
+                action_list: vec![],
+            })
+        })
+        .and_then(|mut god: GodObject| -> Result<Repository> {
             info!("Fetching updates from Repository");
 
+
             // Sync
-            repo.sync().and_then(|repository| -> Result<Repository>{
+            repo_handler.sync().and_then(|repository| -> Result<Repository>{
                 info!("Successfully pulled down new changes");
                 Ok(repository)
             }).or_else(|e| {
@@ -173,7 +197,7 @@ fn ensure(settings: &Config) -> Result<()> {
         })
         .or_else(|e| match e {
             Error::NotFound => {
-                repo.clone().and_then(|repository| -> Result<Repository> {
+                repo_handler.clone().and_then(|repository| -> Result<Repository> {
                     Ok(repository)
                 })
             },
@@ -182,7 +206,7 @@ fn ensure(settings: &Config) -> Result<()> {
             }
         })
         .and_then(|repository| -> Result<Action> {
-            let mut file = File::open(settings.get_str("repo_directory").unwrap() + &"/north.yml").expect("Unable to open file");
+            let mut file = File::open("/tmp/northbourne/repo/north.yml").expect("Unable to open file");
             let mut contents = String::new();
 
             file.read_to_string(&mut contents)
