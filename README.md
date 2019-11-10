@@ -39,3 +39,7 @@ Northbourne's is currently requesting RFC's / Discussions around different use c
 ## License
 
 Northbourne is licensed under the [GNU General Public License v3.0](https://github.com/sifex/northbourne/blob/master/LICENSE)
+
+## Acknowledgements
+
+Thank you to the [Univerity of Canberra](https://www.canberra.edu.au/) for allowing me to develop this alongside by Semester 2 project. Thank you also to [robodair](https://github.com/robodair) who was correct in telling me this was a great learning adventure.
