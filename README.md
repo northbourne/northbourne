@@ -42,4 +42,4 @@ Northbourne is licensed under the [GNU General Public License v3.0](https://gith
 
 ## Acknowledgements
 
-Thank you to the [Univerity of Canberra](https://www.canberra.edu.au/) for allowing me to develop this alongside by Semester 2 project. Thank you also to [robodair](https://github.com/robodair) who was correct in telling me this was a great learning adventure.
+Thank you to the [Univerity of Canberra](https://www.canberra.edu.au/) for allowing me to develop this as my Semester 2 project. Thank you also to [robodair](https://github.com/robodair) who was correct in telling me this was a great learning adventure.
