@@ -40,7 +40,23 @@
 			themeColor: '#7584f9',
 			loadSidebar: true,
 			homepage: 'index.md',
-			auto2top: true
+			auto2top: true,
+			plugins: [
+				function (hook, vm) {
+					hook.beforeEach(function (html) {
+						if (/githubusercontent\.com/.test(vm.route.file)) {
+							url = vm.route.file
+								.replace('raw.githubusercontent.com', 'github.com')
+								.replace(/\/master/, '/blob/master')
+						} else {
+							url = 'https://github.com/sifex/northbourne/blob/master/docs/' + vm.route.file
+						}
+						var editHtml = '[:memo: Edit Document](' + url + ')\n'
+						return editHtml
+					+ html
+					})
+				}
+			]
 		}
 	</script>
 	<script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
