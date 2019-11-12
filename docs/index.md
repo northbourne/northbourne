@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="116" height="117" src="/images/logo.png">
+  <img width="116" height="117" src="https://docs.north.sh/images/logo.png">
 </p>
 
 <h1 align="center">Northbourne – Docs</h1>
