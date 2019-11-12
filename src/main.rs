@@ -71,7 +71,7 @@ fn main() {
     match program() {
         Ok(()) => process::exit(0),
         Err(err) => {
-            eprintln!("{:?}", err);
+            error!("{:?}", err);
             process::exit(1);
         }
     }
@@ -86,8 +86,6 @@ fn start_logging() -> Result<()> {
 
 fn load_config_from_embed(settings: &mut Config, default_file: &str) -> Result<Config> {
     let default_config = DefaultConfig::get(default_file).unwrap();
-
-    info!("{:?}", default_config.as_ref());
 
     settings.merge(ConfigFile::from_str(std::str::from_utf8(default_config.as_ref()).unwrap(), config::FileFormat::Yaml))
         .map_err(|logger_error| -> crate::error::Error {
@@ -106,9 +104,9 @@ fn program() -> Result<()> {
     info!("Starting Northbourne");
 
     // Load up
-    let mut settings = load_config_from_embed(&mut config::Config::default(), "default.yml").expect("Could not unwrap config file");
-    info!("{:?}", settings.get_str("config"));
-
+    let mut settings = load_config_from_embed(&mut config::Config::default(), "default.yml")
+        .expect("Could not unwrap config file");
+    // info!("{:?}", settings.get_str("log_level"));
 
     // CLI
     let yaml = load_yaml!("../cli.yml");
@@ -139,13 +137,12 @@ fn program() -> Result<()> {
     // ////////////// -------- ///////////////
 
     // Repo
-    println!("{:?}", matches.value_of("repo_url"));
+    info!("{:?}", settings.get_str("repo_url"));
     match matches.value_of("repo_url") {
-        Some("") => return Err(Error::Generic),
-        Some(repo) => {
+        Some(repo) if repo != "" => {
             settings.set("repo_url", repo);
         }
-        _ => return Err(Error::Generic)
+        _ => {}
     }
 
     let every: u32 = settings
@@ -216,6 +213,7 @@ fn ensure(settings: &Config) -> Result<()> {
             let docs = YamlLoader::load_from_str(contents.as_str()).unwrap();
             let doc = &docs[0]; // select the first document
             let packages = doc["global"]["packages"].as_vec();
+            let pm : PackageManagerInterface = match
 
             match packages {
                 None => {},

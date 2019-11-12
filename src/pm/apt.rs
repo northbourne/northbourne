@@ -8,7 +8,7 @@ use crate::error::Error::Generic;
 use crate::pm::PackageManagerInterface;
 
 #[derive(Debug)]
-pub struct AlpinePackageManager {
+pub struct AptPackageManager {
     name: String,
     root_cmd: String,
     install_cmd: String,
@@ -17,12 +17,12 @@ pub struct AlpinePackageManager {
     check_cmd: String
 }
 
-impl AlpinePackageManager {
-    pub fn new(settings: &Config) -> AlpinePackageManager {
-        AlpinePackageManager {
-            name: String::from("Alpine Package Manager"),
-            root_cmd: String::from("apk"),
-            install_cmd: String::from("add"),
+impl AptPackageManager {
+    pub fn new(settings: &Config) -> AptPackageManager {
+        AptPackageManager {
+            name: String::from("APT Package Manager"),
+            root_cmd: String::from("apt"),
+            install_cmd: String::from("install"),
             remove_cmd: String::from("remove"),
             check_cmd: String::from("list"),
             settings_repo: settings.get_str("repo_url").unwrap(),
@@ -30,16 +30,15 @@ impl AlpinePackageManager {
     }
 }
 
-impl PackageManagerInterface for AlpinePackageManager {
+impl PackageManagerInterface for AptPackageManager {
     fn check(&self, package_name: &str) -> Result<bool, Error> {
         let program = Command::new(self.root_cmd.as_str())
-            .env("HOMEBREW_NO_AUTO_UPDATE", "1")
             .arg(self.check_cmd.as_str()).output().unwrap();
 
         match String::from_utf8(program.stdout).unwrap()
             .lines()
             .find(|string| {
-                string == &package_name
+                String::from(string).contains(&package_name)
             }) {
             None => Ok(false),
             Some(_) => Ok(true),
