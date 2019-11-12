@@ -9,7 +9,7 @@ Northbourne's main philosophy is that the operation of most CM tools has become 
 
 Northbourne is designed to run independent from both:
   * the endpoint you want to configure (similar to Ansible), without being forced to be a "master" or a "slave" and
-  * the type of operating system your running (Eg. Windows, . 
+  * the type of operating system your running (Eg. Windows, \*Nix, Macos). 
   
 The context driver can be the local shell (Eg. bash, PS, cmd), a remote one (Eg. bash-over-ssh), or even a custom one for various communication methods.
 
