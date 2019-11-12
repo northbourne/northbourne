@@ -30,12 +30,22 @@
 		p > .octicon {
 			margin-bottom: -30px;
 		}
+			
+		#main > p:nth-child(1) > a > svg {
+			fill: #34495e;
+			vertical-align: text-top;
+		}
 		
-		@media only screen and (max-width: 600px) {
+		#main > p:nth-child(1) > a {
+			text-decoration: none;
+		}
+		
+		@media only screen and (min-width: 600px) {
 			#main > p:nth-child(1) > a {
 				text-align: right;
 				width: 100%;
-				display: inline-block;
+				display: block;
+				margin-bottom: -59px;
 			}
 		}
 		
