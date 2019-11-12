@@ -91,7 +91,7 @@ impl Repo<GitRepository> for GitRepo {
                 Ok(repo)
             },
             Err(error_code) => {
-                error!("Error cloning repo {:?}", error_code);
+                error!("Error cloning repo – Reason: {:?}", error_code);
                 Err(Generic)
             }
         }

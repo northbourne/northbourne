@@ -9,6 +9,7 @@ pub enum Error {
     Generic = 0,
     Permission = 1,
     NotFound = 2,
+    Unimplimented = 4,
 }
 
 impl fmt::Display for Error {
@@ -22,7 +23,8 @@ impl std::error::Error for Error {
         match self {
             Error::Generic => "Generic Error was found, exiting",
             Error::Permission => "Permissions error was found, exiting",
-            Error::NotFound => "Not found exception was found thrown, exiting"
+            Error::NotFound => "Not found exception was found thrown, exiting",
+            Error::Unimplimented => "wip"
         }
     }
 

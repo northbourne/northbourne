@@ -38,7 +38,7 @@ impl PackageManagerInterface for AptPackageManager {
         match String::from_utf8(program.stdout).unwrap()
             .lines()
             .find(|string| {
-                String::from(string).contains(&package_name)
+                String::from(*string).contains(&package_name)
             }) {
             None => Ok(false),
             Some(_) => Ok(true),

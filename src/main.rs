@@ -43,6 +43,7 @@ use crate::pm::homebrew::Homebrew;
 use crate::pm::PackageManagerInterface;
 use crate::repo::git::GitRepo;
 use crate::repo::Repo;
+use crate::pm::apt::AptPackageManager;
 
 mod error;
 mod repo;
@@ -137,7 +138,6 @@ fn program() -> Result<()> {
     // ////////////// -------- ///////////////
 
     // Repo
-    info!("{:?}", settings.get_str("repo_url"));
     match matches.value_of("repo_url") {
         Some(repo) if repo != "" => {
             settings.set("repo_url", repo);
@@ -160,7 +160,6 @@ fn program() -> Result<()> {
     Ok(())
 }
 // Ensure Method
-
 fn ensure(settings: &Config) -> Result<()> {
     let mut repo_handler = GitRepo::new();
 
@@ -180,7 +179,6 @@ fn ensure(settings: &Config) -> Result<()> {
         })
         .and_then(|mut god: GodObject| -> Result<Repository> {
             info!("Fetching updates from Repository");
-
 
             // Sync
             repo_handler.sync().and_then(|repository| -> Result<Repository>{
@@ -213,13 +211,22 @@ fn ensure(settings: &Config) -> Result<()> {
             let docs = YamlLoader::load_from_str(contents.as_str()).unwrap();
             let doc = &docs[0]; // select the first document
             let packages = doc["global"]["packages"].as_vec();
-            let pm : PackageManagerInterface = match
+
+            fn get_appropriate_package_manager(settings : &Config) -> Result<Box<dyn PackageManagerInterface>> {
+                match os_info::get().os_type() {
+                    os_info::Type::Macos => Ok(Box::new(Homebrew::new(settings))),
+                    os_info::Type::Ubuntu => Ok(Box::new(AptPackageManager::new(settings))),
+                    _ => Err(Generic)
+                }
+            }
+
+            let pm = get_appropriate_package_manager(settings).expect("Could not determine OS");
 
             match packages {
                 None => {},
                 Some(packages) => {
                     for package in packages {
-                        (Homebrew::new(settings)).check(package.as_str().unwrap()).and_then(|is_installed| -> Result<bool> {
+                        pm.check(package.as_str().unwrap()).and_then(|is_installed| -> Result<bool> {
                             match is_installed {
                                 true => {
                                     info!("{} is already installed, skipping.", package.as_str().unwrap());
@@ -227,7 +234,7 @@ fn ensure(settings: &Config) -> Result<()> {
                                 },
                                 false => {
                                     info!("Installing {}", package.as_str().unwrap());
-                                    (Homebrew::new(settings)).install(package.as_str().unwrap())
+                                    pm.install(package.as_str().unwrap())
                                 }
                             }
                         });
@@ -236,6 +243,8 @@ fn ensure(settings: &Config) -> Result<()> {
             }
             Ok(Action{})
         });
+
+    info!("Finalised ensure loop");
 
 
 

@@ -4,7 +4,7 @@ use std::process::{Command, Stdio};
 use config::Config;
 
 use crate::error::Error;
-use crate::error::Error::Generic;
+use crate::error::Error::Unimplimented;
 use crate::pm::PackageManagerInterface;
 
 #[derive(Debug)]
@@ -92,6 +92,6 @@ impl PackageManagerInterface for Homebrew {
     }
 
     fn remove(&self, package_name: &str) -> Result<bool, Error> {
-        Err(Generic)
+        Err(Unimplimented)
     }
 }
